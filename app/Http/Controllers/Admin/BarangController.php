@@ -11,8 +11,8 @@ class BarangController extends Controller
 {
     public function index()
     {
-        $barang = Barang::latest()->paginate(10);
-        return view('admin.barang.index', compact('barang'));
+        $barangs = Barang::latest()->paginate(10);
+        return view('admin.barang.index', compact('barangs'));
     }
 
     public function create()
@@ -22,32 +22,27 @@ class BarangController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'nama_barang' => 'required|string|max:255',
             'pemilik_barang' => 'required|string|max:255',
-            'deskripsi_barang' => 'nullable|string',
             'kategori_barang' => 'required|string|max:100',
             'jumlah_total' => 'required|integer|min:1',
+            'jumlah_tersedia' => 'required|integer|min:0',
             'kondisi_barang' => 'required|in:baik,rusak_ringan,rusak_berat',
             'lokasi_penyimpanan' => 'required|string|max:255',
             'gambar_barang' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'dapat_disewa' => 'boolean',
             'harga_sewa_per_hari' => 'required_if:dapat_disewa,1|numeric|min:0',
         ]);
 
-        // Set jumlah tersedia sama dengan jumlah total saat pertama kali
-        $validated['jumlah_tersedia'] = $validated['jumlah_total'];
-        
-        // Handle checkbox
-        $validated['dapat_disewa'] = $request->has('dapat_disewa');
+        $data = $request->all();
 
-        // Handle image upload
         if ($request->hasFile('gambar_barang')) {
-            $path = $request->file('gambar_barang')->store('barang', 'public');
-            $validated['gambar_barang'] = $path;
+            $imageName = time().'.'.$request->gambar_barang->extension();
+            $request->gambar_barang->move(public_path('images/barang'), $imageName);
+            $data['gambar_barang'] = $imageName;
         }
 
-        Barang::create($validated);
+        Barang::create($data);
 
         return redirect()->route('admin.barang.index')
             ->with('success', 'Barang berhasil ditambahkan.');
@@ -65,40 +60,32 @@ class BarangController extends Controller
 
     public function update(Request $request, Barang $barang)
     {
-        $validated = $request->validate([
+        $request->validate([
             'nama_barang' => 'required|string|max:255',
             'pemilik_barang' => 'required|string|max:255',
-            'deskripsi_barang' => 'nullable|string',
             'kategori_barang' => 'required|string|max:100',
             'jumlah_total' => 'required|integer|min:1',
+            'jumlah_tersedia' => 'required|integer|min:0',
             'kondisi_barang' => 'required|in:baik,rusak_ringan,rusak_berat',
             'lokasi_penyimpanan' => 'required|string|max:255',
             'gambar_barang' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'dapat_disewa' => 'boolean',
             'harga_sewa_per_hari' => 'required_if:dapat_disewa,1|numeric|min:0',
         ]);
 
-        // Update jumlah tersedia jika jumlah total berubah
-        if ($validated['jumlah_total'] != $barang->jumlah_total) {
-            $selisih = $validated['jumlah_total'] - $barang->jumlah_total;
-            $validated['jumlah_tersedia'] = max(0, $barang->jumlah_tersedia + $selisih);
-        }
-        
-        // Handle checkbox
-        $validated['dapat_disewa'] = $request->has('dapat_disewa');
+        $data = $request->all();
 
-        // Handle image upload
         if ($request->hasFile('gambar_barang')) {
-            // Delete old image if exists
-            if ($barang->gambar_barang && Storage::disk('public')->exists($barang->gambar_barang)) {
-                Storage::disk('public')->delete($barang->gambar_barang);
+            // Hapus gambar lama jika ada
+            if ($barang->gambar_barang && file_exists(public_path('images/barang/'.$barang->gambar_barang))) {
+                unlink(public_path('images/barang/'.$barang->gambar_barang));
             }
-            
-            $path = $request->file('gambar_barang')->store('barang', 'public');
-            $validated['gambar_barang'] = $path;
+
+            $imageName = time().'.'.$request->gambar_barang->extension();
+            $request->gambar_barang->move(public_path('images/barang'), $imageName);
+            $data['gambar_barang'] = $imageName;
         }
 
-        $barang->update($validated);
+        $barang->update($data);
 
         return redirect()->route('admin.barang.index')
             ->with('success', 'Barang berhasil diperbarui.');
@@ -106,9 +93,9 @@ class BarangController extends Controller
 
     public function destroy(Barang $barang)
     {
-        // Delete image if exists
-        if ($barang->gambar_barang && Storage::disk('public')->exists($barang->gambar_barang)) {
-            Storage::disk('public')->delete($barang->gambar_barang);
+        // Hapus gambar jika ada
+        if ($barang->gambar_barang && file_exists(public_path('images/barang/'.$barang->gambar_barang))) {
+            unlink(public_path('images/barang/'.$barang->gambar_barang));
         }
 
         $barang->delete();

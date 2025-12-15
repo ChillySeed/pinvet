@@ -30,10 +30,4 @@ class Barang extends Model
         'dapat_disewa' => 'boolean',
         'harga_sewa_per_hari' => 'decimal:2',
     ];
-
-    // Relationships
-    public function detailPeminjaman()
-    {
-        return $this->hasMany(DetailPeminjaman::class, 'id_barang');
-    }
 }
