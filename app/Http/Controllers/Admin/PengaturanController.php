@@ -4,62 +4,54 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Setting;
+use Illuminate\Support\Facades\Storage;
 
 class PengaturanController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the settings (form edit).
      */
     public function index()
     {
-        //
+        $settings = Setting::all()->keyBy('key');
+        return view('admin.pengaturan.index', compact('settings'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Update the specified settings in storage.
      */
-    public function create()
+    public function update(Request $request)
     {
-        //
-    }
+        $keys = Setting::pluck('key')->toArray();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        foreach ($keys as $key) {
+            if ($request->has($key)) {
+                $setting = Setting::where('key', $key)->first();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+                if ($setting->type == 'image' && $request->hasFile($key)) {
+                    // Upload file
+                    $file = $request->file($key);
+                    $path = $file->store('settings', 'public');
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+                    // Hapus file lama jika ada
+                    if ($setting->value && Storage::disk('public')->exists($setting->value)) {
+                        Storage::disk('public')->delete($setting->value);
+                    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+                    $setting->value = $path;
+                } elseif ($setting->type == 'json') {
+                    // Untuk placeholder list, mungkin tidak perlu diupdate via form biasa
+                    // Bisa diabaikan atau handle khusus
+                    continue;
+                } else {
+                    $setting->value = $request->input($key);
+                }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+                $setting->save();
+            }
+        }
+
+        return redirect()->route('admin.pengaturan.index')->with('success', 'Pengaturan berhasil disimpan.');
     }
 }

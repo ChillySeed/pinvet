@@ -46,6 +46,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('pengaturan', PengaturanController::class)->only(['index', 'update']);
     Route::resource('pembayaran', PembayaranController::class)->only(['index', 'show', 'update']);
+    Route::resource('kategori', KategoriController::class);
 
     // Tambahan route untuk update status peminjaman
     Route::post('/peminjaman/{peminjaman}/update-status', [PeminjamanController::class, 'updateStatus'])->name('peminjaman.updateStatus');
