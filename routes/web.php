@@ -5,11 +5,14 @@ use App\Http\Controllers\Guest\HomeController;
 use App\Http\Controllers\Guest\KatalogController;
 use App\Http\Controllers\Guest\CartController;
 use App\Http\Controllers\Guest\SuratController;
+use App\Http\Controllers\Admin\PeminjamanController;
+
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\BarangController;
-use App\Http\Controllers\Admin\PeminjamanController;
+use App\Http\Controllers\Admin\PeminjamanController as AdminPeminjamanController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\PembayaranController;
 
@@ -19,9 +22,14 @@ use App\Http\Controllers\Admin\PembayaranController;
 |--------------------------------------------------------------------------
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/katalog', [KatalogController::class, 'index'])->name('katalog');
-Route::get('/katalog/{barang}', [KatalogController::class, 'show'])->name('katalog.show');
 
+// Katalog
+Route::prefix('katalog')->name('guest.katalog.')->group(function () {
+    Route::get('/', [KatalogController::class, 'index'])->name('index');
+    Route::get('/{barang}', [KatalogController::class, 'show'])->name('show');
+});
+
+// Keranjang
 Route::prefix('cart')->name('cart.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');
     Route::post('/add/{barang}', [CartController::class, 'add'])->name('add');
@@ -30,8 +38,14 @@ Route::prefix('cart')->name('cart.')->group(function () {
     Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout');
 });
 
-Route::get('/peminjaman/{peminjaman}/preview', [SuratController::class, 'preview'])->name('peminjaman.preview');
-Route::post('/peminjaman/{peminjaman}/generate', [SuratController::class, 'generate'])->name('peminjaman.generate');
+// Peminjaman (Guest flow)
+Route::prefix('peminjaman')->name('peminjaman.')->group(function () {
+    Route::get('/start/{tipe}', [PeminjamanController::class, 'start'])->name('start');
+    Route::get('/form/{tipe}', [PeminjamanController::class, 'form'])->name('form');
+    Route::post('/store', [PeminjamanController::class, 'store'])->name('store');
+    Route::get('/{peminjaman}/preview', [SuratController::class, 'preview'])->name('preview');
+    Route::post('/{peminjaman}/generate', [SuratController::class, 'generate'])->name('generate');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -42,17 +56,16 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('barang', BarangController::class);
-    Route::resource('peminjaman', PeminjamanController::class);
+    Route::resource('kategori', KategoriController::class);
+    Route::resource('peminjaman', AdminPeminjamanController::class);
     Route::resource('users', UserController::class);
     Route::resource('pengaturan', PengaturanController::class)->only(['index', 'update']);
     Route::resource('pembayaran', PembayaranController::class)->only(['index', 'show', 'update']);
-    Route::resource('kategori', KategoriController::class);
 
-    // Tambahan route untuk update status peminjaman
-    Route::post('/peminjaman/{peminjaman}/update-status', [PeminjamanController::class, 'updateStatus'])->name('peminjaman.updateStatus');
+    Route::post('/peminjaman/{peminjaman}/update-status', [AdminPeminjamanController::class, 'updateStatus'])->name('peminjaman.updateStatus');
 });
 
-// Route login admin (nanti buat AuthController sederhana)
+// Login Admin
 Route::get('/admin/login', [App\Http\Controllers\AuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [App\Http\Controllers\AuthController::class, 'login']);
 Route::post('/admin/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('admin.logout');

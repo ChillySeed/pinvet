@@ -28,11 +28,11 @@ class KatalogController extends Controller
         $barangs = $query->paginate(12);
         $kategoris = Kategori::all();
 
-        return view('guest.katalog', compact('barangs', 'kategoris'));
+        return view('guest.katalog.index', compact('barangs', 'kategoris'));
     }
 
     public function show(Barang $barang)
     {
-        return view('guest.barang-detail', compact('barang'));
+        return view('guest.katalog.index', compact('barang'));
     }
 }

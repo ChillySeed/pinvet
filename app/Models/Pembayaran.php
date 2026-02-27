@@ -9,6 +9,8 @@ class Pembayaran extends Model
 {
     use HasFactory;
 
+    protected $table = 'pembayaran';
+
     protected $fillable = [
         'peminjaman_id', 'user_id_verifikasi', 'jumlah_bayar', 'metode_pembayaran',
         'tanggal_bayar', 'bukti_pembayaran', 'status_verifikasi', 'catatan'

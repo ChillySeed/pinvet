@@ -9,6 +9,8 @@ class RiwayatPeminjaman extends Model
 {
     use HasFactory;
 
+    protected $table = 'riwayat_peminjaman';
+
     protected $fillable = [
         'peminjaman_id', 'user_id', 'status_sebelumnya', 'status_terbaru', 'keterangan'
     ];

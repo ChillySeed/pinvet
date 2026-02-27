@@ -10,6 +10,8 @@ class Peminjaman extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'peminjaman';
+
     protected $fillable = [
         'tipe_peminjam', 'user_id_input', 'nama_peminjam', 'nim_peminjam',
         'jabatan_peminjam', 'instansi_peminjam', 'kontak_peminjam', 'email_peminjam',
