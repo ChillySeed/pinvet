@@ -2,51 +2,43 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
-
-    protected $table = 'users';
-    protected $primaryKey = 'id_user';
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
-        'username',
-        'nama_pengurus',
-        'nim_pengurus',
-        'email_pengurus',
-        'alamat_pengurus',
-        'password',
-        'level_akses',
-        'is_active',
+        'name', 'email', 'password', 'is_admin',
     ];
 
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password', 'remember_token',
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
+        'is_admin' => 'boolean',
     ];
 
-    // Relationships
-    public function peminjaman()
+    // Relasi: user bisa membuat banyak peminjaman (sebagai inputter)
+    public function peminjamans()
     {
-        return $this->hasMany(Peminjaman::class, 'id_user_input');
+        return $this->hasMany(Peminjaman::class, 'user_id_input');
     }
 
-    public function riwayat()
+    // Relasi: user memverifikasi pembayaran
+    public function verifikasiPembayaran()
     {
-        return $this->hasMany(RiwayatPeminjaman::class, 'id_user');
+        return $this->hasMany(Pembayaran::class, 'user_id_verifikasi');
     }
 
-    public function pembayaran()
+    // Relasi: user mencatat riwayat
+    public function riwayatPeminjaman()
     {
-        return $this->hasMany(Pembayaran::class, 'id_user_verifikasi');
+        return $this->hasMany(RiwayatPeminjaman::class, 'user_id');
     }
 }
