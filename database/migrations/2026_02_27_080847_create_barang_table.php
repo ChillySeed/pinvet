@@ -16,15 +16,12 @@ return new class extends Migration
             $table->foreignId('kategori_id')->constrained('kategoris')->onDelete('restrict');
             $table->unsignedInteger('jumlah_total');
             $table->unsignedInteger('jumlah_tersedia');
-            $table->string('kondisi_barang')->default('baik'); // baik, rusak, etc
-            $table->string('lokasi_penyimpanan');
-            $table->string('gambar_barang')->nullable();
+            $table->string('kondisi_barang')->default('baik');
+            $table->string('gambar_barang')->nullable(); // path ke file gambar
             $table->boolean('dapat_disewa')->default(false);
             $table->decimal('harga_sewa_per_hari', 15, 2)->default(0);
             $table->timestamps();
             $table->softDeletes();
-
-            // pastikan jumlah_tersedia <= jumlah_total
         });
     }
 

@@ -14,7 +14,7 @@ class Barang extends Model
 
     protected $fillable = [
         'nama_barang', 'pemilik_barang', 'deskripsi_barang', 'kategori_id',
-        'jumlah_total', 'jumlah_tersedia', 'kondisi_barang', 'lokasi_penyimpanan',
+        'jumlah_total', 'jumlah_tersedia', 'kondisi_barang',
         'gambar_barang', 'dapat_disewa', 'harga_sewa_per_hari'
     ];
 

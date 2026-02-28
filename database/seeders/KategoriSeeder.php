@@ -12,23 +12,28 @@ class KategoriSeeder extends Seeder
     {
         $kategoris = [
             ['nama' => 'Elektronik', 'slug' => Str::slug('Elektronik')],
-            ['nama' => 'Komputer & Laptop', 'slug' => Str::slug('Komputer & Laptop')],
-            ['nama' => 'Kamera & Videografi', 'slug' => Str::slug('Kamera & Videografi')],
-            ['nama' => 'Audio & Sound System', 'slug' => Str::slug('Audio & Sound System')],
-            ['nama' => 'Alat Tulis Kantor (ATK)', 'slug' => Str::slug('Alat Tulis Kantor ATK')],
-            ['nama' => 'Perlengkapan Acara', 'slug' => Str::slug('Perlengkapan Acara')],
+            ['nama' => 'Alat Tulis Kantor', 'slug' => Str::slug('Alat Tulis Kantor')],
             ['nama' => 'Peralatan Olahraga', 'slug' => Str::slug('Peralatan Olahraga')],
-            ['nama' => 'Komponen Robotika', 'slug' => Str::slug('Komponen Robotika')],
-            ['nama' => 'Alat Praktikum', 'slug' => Str::slug('Alat Praktikum')],
-            ['nama' => 'Buku & Literatur', 'slug' => Str::slug('Buku & Literatur')],
-            ['nama' => 'Furniture', 'slug' => Str::slug('Furniture')],
-            ['nama' => 'Alat Pertukangan', 'slug' => Str::slug('Alat Pertukangan')],
-            ['nama' => 'Kendaraan', 'slug' => Str::slug('Kendaraan')],
-            ['nama' => 'Lain-lain', 'slug' => Str::slug('Lain-lain')],
+            ['nama' => 'Perlengkapan Acara', 'slug' => Str::slug('Perlengkapan Acara')],
+            ['nama' => 'Alat Musik', 'slug' => Str::slug('Alat Musik')],
+            ['nama' => 'Komputer & Laptop', 'slug' => Str::slug('Komputer & Laptop')],
+            ['nama' => 'Kamera & Fotografi', 'slug' => Str::slug('Kamera & Fotografi')],
+            ['nama' => 'Robotika', 'slug' => Str::slug('Robotika')],
+            ['nama' => 'Komponen Elektronik', 'slug' => Str::slug('Komponen Elektronik')],
+            ['nama' => 'Jaringan & Komunikasi', 'slug' => Str::slug('Jaringan & Komunikasi')],
+            ['nama' => 'Alat Laboratorium', 'slug' => Str::slug('Alat Laboratorium')],
+            ['nama' => 'Sound System', 'slug' => Str::slug('Sound System')],
+            ['nama' => 'Proyektor & Layar', 'slug' => Str::slug('Proyektor & Layar')],
+            ['nama' => 'Drone', 'slug' => Str::slug('Drone')],
+            ['nama' => 'Toolkit & Perkakas', 'slug' => Str::slug('Toolkit & Perkakas')],
+            ['nama' => 'Buku & Referensi', 'slug' => Str::slug('Buku & Referensi')],
         ];
 
         foreach ($kategoris as $kat) {
-            Kategori::create($kat);
+            Kategori::firstOrCreate(
+                ['slug' => $kat['slug']],
+                $kat
+            );
         }
     }
 }
