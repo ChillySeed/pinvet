@@ -7,7 +7,6 @@ use App\Http\Controllers\Guest\CartController;
 use App\Http\Controllers\Guest\SuratController;
 use App\Http\Controllers\Admin\PeminjamanController;
 
-
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\BarangController;
 use App\Http\Controllers\Admin\PeminjamanController as AdminPeminjamanController;
@@ -59,8 +58,9 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::resource('kategori', KategoriController::class);
     Route::resource('peminjaman', AdminPeminjamanController::class);
     Route::resource('users', UserController::class);
-    Route::resource('pengaturan', PengaturanController::class)->only(['index', 'update']);
-    Route::resource('pembayaran', PembayaranController::class)->only(['index', 'show', 'update']);
+    Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
+    Route::post('/pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');
+    Route::resource('pembayaran', PembayaranController::class)->only(['index','create', 'show', 'update']);
 
     Route::post('/peminjaman/{peminjaman}/update-status', [AdminPeminjamanController::class, 'updateStatus'])->name('peminjaman.updateStatus');
 });

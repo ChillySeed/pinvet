@@ -23,6 +23,7 @@ class PengaturanController extends Controller
      */
     public function update(Request $request)
     {
+        // Logika update (sama seperti sebelumnya, hanya tanpa parameter)
         $keys = Setting::pluck('key')->toArray();
 
         foreach ($keys as $key) {
@@ -42,7 +43,6 @@ class PengaturanController extends Controller
                     $setting->value = $path;
                 } elseif ($setting->type == 'json') {
                     // Untuk placeholder list, mungkin tidak perlu diupdate via form biasa
-                    // Bisa diabaikan atau handle khusus
                     continue;
                 } else {
                     $setting->value = $request->input($key);
