@@ -9,6 +9,7 @@ use App\Models\Setting;
 use App\Models\DetailPeminjaman;
 use App\Models\RiwayatPeminjaman;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -74,7 +75,7 @@ class SuratController extends Controller
             'tanggal_kembali' => $peminjaman->tanggal_kembali->format('d-m-Y'),
             'daftar_barang' => $peminjaman->details,
             'total_barang' => $peminjaman->details->sum('jumlah_barang'),
-            'biaya_sewa' => number_format($peminjaman->biaya_sewa_total, 2),
+            'biaya_sewa' => (float) $peminjaman->biaya_sewa_total,
             'nama_penandatangan' => $request->nama_penandatangan ?? Setting::where('key', 'nama_penandatangan')->value('value') ?? 'Ketua UKM',
             'jabatan_penandatangan' => $request->jabatan_penandatangan ?? Setting::where('key', 'jabatan_penandatangan')->value('value') ?? 'Ketua',
         ];

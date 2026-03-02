@@ -88,7 +88,6 @@ class BarangController extends Controller
             'jumlah_total' => 'required|integer|min:0',
             'jumlah_tersedia' => 'required|integer|min:0|lte:jumlah_total',
             'kondisi_barang' => 'required|string|max:50',
-            'lokasi_penyimpanan' => 'required|string|max:255',
             'gambar_barang' => 'nullable|image|max:2048',
             'dapat_disewa' => 'sometimes|boolean',
             'harga_sewa_per_hari' => 'required_if:dapat_disewa,true|numeric|min:0',

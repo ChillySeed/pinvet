@@ -23,7 +23,7 @@ class CartController extends Controller
             $total += $barang->harga_sewa_per_hari * $barang->cart_quantity;
         }
 
-        return view('guest.cart', compact('barangs', 'total'));
+        return view('guest.cart.index', compact('barangs', 'total'));
     }
 
     /**
