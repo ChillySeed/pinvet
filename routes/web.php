@@ -5,7 +5,7 @@ use App\Http\Controllers\Guest\HomeController;
 use App\Http\Controllers\Guest\KatalogController;
 use App\Http\Controllers\Guest\CartController;
 use App\Http\Controllers\Guest\SuratController;
-use App\Http\Controllers\Admin\PeminjamanController;
+use App\Http\Controllers\Guest\PeminjamanController as GuestPeminjamanController;
 
 
 use App\Http\Controllers\Admin\DashboardController;
@@ -40,9 +40,9 @@ Route::prefix('cart')->name('cart.')->group(function () {
 
 // Peminjaman (Guest flow)
 Route::prefix('peminjaman')->name('peminjaman.')->group(function () {
-    Route::get('/start/{tipe}', [PeminjamanController::class, 'start'])->name('start');
-    Route::get('/form/{tipe}', [PeminjamanController::class, 'form'])->name('form');
-    Route::post('/store', [PeminjamanController::class, 'store'])->name('store');
+    Route::get('/start/{tipe}', [GuestPeminjamanController::class, 'start'])->name('start');
+    Route::get('/form/{tipe}', [GuestPeminjamanController::class, 'form'])->name('form');
+    Route::post('/store', [GuestPeminjamanController::class, 'store'])->name('store');
     Route::get('/{peminjaman}/preview', [SuratController::class, 'preview'])->name('preview');
     Route::post('/{peminjaman}/generate', [SuratController::class, 'generate'])->name('generate');
 });
