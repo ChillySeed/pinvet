@@ -13,7 +13,7 @@
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <a href="{{ route('peminjaman.form', 'internal') }}" class="text-decoration-none">
+                            <a href="{{ route('peminjaman.start', 'internal') }}" class="text-decoration-none">
                                 <div class="card h-100 border-primary">
                                     <div class="card-body text-center p-4">
                                         <div class="bg-primary bg-gradient text-white rounded-circle mx-auto mb-3" 
@@ -27,7 +27,7 @@
                             </a>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <a href="{{ route('peminjaman.form', 'eksternal') }}" class="text-decoration-none">
+                            <a href="{{ route('peminjaman.start', 'eksternal') }}" class="text-decoration-none">
                                 <div class="card h-100 border-success">
                                     <div class="card-body text-center p-4">
                                         <div class="bg-success bg-gradient text-white rounded-circle mx-auto mb-3" 
