@@ -8,7 +8,7 @@
         body {
             font-family: 'Times New Roman', Times, serif;
             font-size: 12pt;
-            line-height: 1.4;
+            line-height: 1.2;
             margin: 2cm;
         }
         .kop {
@@ -23,42 +23,51 @@
             font-weight: bold;
         }
         .kop p {
-            margin: 0;
+            margin: 2px 0;
             font-size: 12pt;
         }
         .content {
-            margin-top: 30px;
+            margin-top: 20px;
         }
         .content h3 {
             text-align: center;
             text-decoration: underline;
             font-size: 14pt;
-            margin-bottom: 20px;
+            margin: 20px 0;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 15px 0;
         }
         th, td {
             border: 1px solid #000;
-            padding: 8px;
+            padding: 6px;
             text-align: left;
         }
         th {
             background-color: #f2f2f2;
         }
         .signature {
-            margin-top: 50px;
+            margin-top: 40px;
             text-align: right;
         }
         .signature p {
-            margin: 5px 0;
+            margin: 3px 0;
         }
         .footer {
             margin-top: 30px;
             font-size: 10pt;
             text-align: center;
+            color: #555;
+        }
+        .info-table {
+            border: none;
+            width: auto;
+        }
+        .info-table td {
+            border: none;
+            padding: 2px 0;
         }
     </style>
 </head>
@@ -74,28 +83,28 @@
         <p><strong>Nomor:</strong> {{ $nomor_surat }}</p>
         <p>Yang bertanda tangan di bawah ini:</p>
 
-        <table style="border: none; width: auto;">
+        <table class="info-table">
             <tr>
-                <td style="border: none; width: 120px;">Nama</td>
-                <td style="border: none;">: {{ $nama_peminjam }}</td>
+                <td style="width: 120px;">Nama</td>
+                <td>: {{ $nama_peminjam }}</td>
             </tr>
             @if(!empty($nim))
             <tr>
-                <td style="border: none;">NIM</td>
-                <td style="border: none;">: {{ $nim }}</td>
+                <td>NIM</td>
+                <td>: {{ $nim }}</td>
             </tr>
             @endif
             <tr>
-                <td style="border: none;">Instansi/UKM</td>
-                <td style="border: none;">: {{ $instansi }}</td>
+                <td>Instansi/UKM</td>
+                <td>: {{ $instansi }}</td>
             </tr>
             <tr>
-                <td style="border: none;">Kontak</td>
-                <td style="border: none;">: {{ $kontak_peminjam ?? '-' }}</td>
+                <td>Kontak</td>
+                <td>: {{ $kontak_peminjam ?? '-' }}</td>
             </tr>
             <tr>
-                <td style="border: none;">Email</td>
-                <td style="border: none;">: {{ $email_peminjam ?? '-' }}</td>
+                <td>Email</td>
+                <td>: {{ $email_peminjam ?? '-' }}</td>
             </tr>
         </table>
 
@@ -120,23 +129,23 @@
             </tbody>
         </table>
 
-        <table style="border: none; width: auto; margin-top: 10px;">
+        <table class="info-table" style="margin-top: 10px;">
             <tr>
-                <td style="border: none; width: 120px;">Tanggal Pinjam</td>
-                <td style="border: none;">: {{ $tanggal_pinjam }}</td>
+                <td style="width: 120px;">Tanggal Pinjam</td>
+                <td>: {{ $tanggal_pinjam }}</td>
             </tr>
             <tr>
-                <td style="border: none;">Tanggal Kembali</td>
-                <td style="border: none;">: {{ $tanggal_kembali }}</td>
+                <td>Tanggal Kembali</td>
+                <td>: {{ $tanggal_kembali }}</td>
             </tr>
             <tr>
-                <td style="border: none;">Total Barang</td>
-                <td style="border: none;">: {{ $total_barang }} item</td>
+                <td>Total Barang</td>
+                <td>: {{ $total_barang }} item</td>
             </tr>
             @if($biaya_sewa > 0)
             <tr>
-                <td style="border: none;">Total Biaya Sewa</td>
-                <td style="border: none;">: Rp {{ number_format($biaya_sewa, 0, ',', '.') }}</td>
+                <td>Total Biaya Sewa</td>
+                <td>: Rp {{ number_format((float)$biaya_sewa, 0, ',', '.') }}</td>
             </tr>
             @endif
         </table>

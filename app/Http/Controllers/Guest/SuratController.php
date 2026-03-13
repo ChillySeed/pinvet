@@ -71,6 +71,8 @@ class SuratController extends Controller
             'nama_peminjam' => $peminjaman->nama_peminjam,
             'nim' => $peminjaman->nim_peminjam,
             'instansi' => $peminjaman->instansi_peminjam,
+            'kontak_peminjam' => $peminjaman->kontak_peminjam,
+            'email_peminjam' => $peminjaman->email_peminjam,
             'tanggal_pinjam' => $peminjaman->tanggal_pinjam->format('d-m-Y'),
             'tanggal_kembali' => $peminjaman->tanggal_kembali->format('d-m-Y'),
             'daftar_barang' => $peminjaman->details,
@@ -78,6 +80,7 @@ class SuratController extends Controller
             'biaya_sewa' => (float) $peminjaman->biaya_sewa_total,
             'nama_penandatangan' => $request->nama_penandatangan ?? Setting::where('key', 'nama_penandatangan')->value('value') ?? 'Ketua UKM',
             'jabatan_penandatangan' => $request->jabatan_penandatangan ?? Setting::where('key', 'jabatan_penandatangan')->value('value') ?? 'Ketua',
+            'alamat_ukm' => Setting::where('key', 'alamat_ukm')->value('value') ?? 'Jl. Kampus No. 1, Gedung Student Center Lt. 3',
         ];
 
         // Render PDF
@@ -104,22 +107,24 @@ class SuratController extends Controller
      */
     private function generateNomorSuratInternal(Peminjaman $peminjaman)
     {
-        // Format contoh: 002.05/R.09/RIPTEK/II/2026
-        // Kita bisa ambil dari settings
-        $format = Setting::where('key', 'internal_nomor_format')->value('value') ?? '{nomor_urut:03d}.{kode_ukm}/R.{kode_divisi}/RIPTEK/{bulan_romawi}/{tahun}';
+        $format = Setting::where('key', 'internal_nomor_format')->value('value') 
+            ?? '{nomor_urut:03d}.{kode_ukm}/R.{kode_divisi}/RIPTEK/{bulan_romawi}/{tahun}';
 
-        // Hitung nomor urut berdasarkan tahun
         $tahun = $peminjaman->created_at->format('Y');
         $bulan = $peminjaman->created_at->format('m');
         $count = Peminjaman::whereYear('created_at', $tahun)
-                 ->whereNotNull('nomor_surat_internal')
-                 ->count() + 1;
+                ->whereNotNull('nomor_surat_internal')
+                ->count() + 1;
 
-        // Data pengganti
+        // Ambil kode UKM dan divisi dari setting atau default
+        $kode_ukm = Setting::where('key', 'kode_ukm')->value('value') ?? '05';
+        $kode_divisi = Setting::where('key', 'kode_divisi')->value('value') ?? '09';
+
         $replace = [
             '{nomor_urut}' => str_pad($count, 3, '0', STR_PAD_LEFT),
-            '{kode_ukm}' => '05', // contoh, bisa dari setting
-            '{kode_divisi}' => '09',
+            '{nomor_urut:03d}' => str_pad($count, 3, '0', STR_PAD_LEFT), // untuk yang pakai format
+            '{kode_ukm}' => $kode_ukm,
+            '{kode_divisi}' => $kode_divisi,
             '{bulan_romawi}' => $this->numberToRoman($bulan),
             '{tahun}' => $tahun,
         ];
