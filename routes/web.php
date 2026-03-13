@@ -59,7 +59,8 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::resource('kategori', KategoriController::class);
     Route::resource('peminjaman', AdminPeminjamanController::class);
     Route::resource('users', UserController::class);
-    Route::resource('pengaturan', PengaturanController::class)->only(['index', 'update']);
+    Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
+    Route::post('/pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');
     Route::resource('pembayaran', PembayaranController::class)->only(['index', 'show', 'update']);
 
     Route::post('/peminjaman/{peminjaman}/update-status', [AdminPeminjamanController::class, 'updateStatus'])->name('peminjaman.updateStatus');
